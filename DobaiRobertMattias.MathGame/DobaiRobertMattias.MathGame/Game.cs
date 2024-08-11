@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Math_Game
 {
     internal class Game
     {
-        public void gameStart()
+        public void GameStart()
         {
             Console.WriteLine("So, we will show you some operations and you have to type the correct answer \n");
 
