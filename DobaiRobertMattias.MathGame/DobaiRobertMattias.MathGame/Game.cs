@@ -1,185 +1,138 @@
-﻿using System;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace Math_Game
 {
     internal class Game
     {
+        private Random ran = new Random();
+        private List<int> scores = new List<int>();
+
         public void GameStart()
         {
-            Console.WriteLine("So, we will show you some operations and you have to type the correct answer \n");
+            Console.WriteLine("Welcome to the Math Game!");
 
             bool play = true;
 
-            int num = 0;
-            int[] scores = new int[100];
-
-
-
-
             while (play)
             {
-                Console.WriteLine("Choose your operation\n" +
-                "1.ADDITION\n" +
-                "2.SUBSTRACTION\n" +
-                "3.MULTIPLICATION\n" +
-                "4. DIVISION\n ");
-                Console.WriteLine("Wich one you wanna start with?");
-                Console.WriteLine("1/2/3/4");
+                Console.WriteLine("\nChoose an option:\n" +
+                                  "1. ADDITION\n" +
+                                  "2. SUBTRACTION\n" +
+                                  "3. MULTIPLICATION\n" +
+                                  "4. DIVISION\n" +
+                                  "5. VIEW HISTORY\n" +
+                                  "6. EXIT");
+                Console.Write("Enter your choice (1-6): ");
                 string operation = Console.ReadLine();
-
-                int score = 0;
-                bool isRunning = true;
-
-
 
                 switch (operation)
                 {
                     case "1":
-
-
-                        Console.WriteLine("You chose ADDITION, let's go!");
-                        while (isRunning)
-                        {
-
-                            Random ran = new Random();
-                            int num1 = ran.Next(0, 100);
-                            int num2 = ran.Next(0, 100);
-
-                            int result = num1 + num2;
-                            Console.WriteLine($"\t {num1} + {num2}=");
-                            int userResult = Convert.ToInt32(Console.ReadLine());
-
-                            if (userResult == result)
-                            {
-                                Console.WriteLine("Correct\t");
-                                score++;
-
-                            }
-                            else
-                            {
-                                isRunning = false;
-                                Console.WriteLine("Incorrect");
-
-
-                            }
-                        }
-                        break;
                     case "2":
-                        isRunning = true;
-
-                        Console.WriteLine("You chose SUBSTRACTION, let's go!");
-                        while (isRunning)
-                        {
-
-                            Random ran = new Random();
-                            int num1 = ran.Next(0, 100);
-                            int num2 = ran.Next(0, 100);
-
-                            int result = num1 - num2;
-                            Console.WriteLine($"\t {num1} - {num2}=");
-                            int userResult = Convert.ToInt32(Console.ReadLine());
-
-                            if (userResult == result)
-                            {
-                                Console.WriteLine("Correct\t");
-                                score++;
-                            }
-                            else
-                            {
-                                isRunning = false;
-                                Console.WriteLine("Incorrect");
-
-                            }
-                        }
-                        break;
                     case "3":
-                        isRunning = true;
-
-                        Console.WriteLine("You chose MULTIPLICATION, let's go!");
-                        while (isRunning)
-                        {
-
-                            Random ran = new Random();
-                            int num1 = ran.Next(0, 100);
-                            int num2 = ran.Next(0, 10);
-
-                            int result = num1 * num2;
-                            Console.WriteLine($"\t {num1} * {num2}=");
-                            int userResult = Convert.ToInt32(Console.ReadLine());
-
-                            if (userResult == result)
-                            {
-                                Console.WriteLine("Correct\t");
-                                score++;
-                            }
-                            else
-                            {
-                                isRunning = false;
-                                Console.WriteLine("Incorrect");
-
-                            }
-                        }
-                        break;
                     case "4":
-                        isRunning = true;
+                        int score = PlayGame(operation);
+                        scores.Add(score);
+                        Console.WriteLine($"Your score for this round: {score}");
+                        break;
 
-                        Console.WriteLine("You chose ADDITION, let's go!");
-                        while (isRunning)
+                    case "5":
+                        ViewHistory();
+                        break;
+
+                    case "6":
+                        play = false;
+                        Console.WriteLine("Thanks for playing!");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid option. Please choose a number between 1 and 6.");
+                        break;
+                }
+            }
+        }
+
+        private int PlayGame(string operation)
+        {
+            bool isRunning = true;
+            int score = 0;
+
+            while (isRunning)
+            {
+                int num1 = ran.Next(0, 100);
+                int num2 = operation == "3" ? ran.Next(0, 10) : ran.Next(1, 100);
+                int result = 0;
+                string operationSymbol = "";
+
+                switch (operation)
+                {
+                    case "1": // Addition
+                        result = num1 + num2;
+                        operationSymbol = "+";
+                        break;
+                    case "2": // Subtraction
+                        result = num1 - num2;
+                        operationSymbol = "-";
+                        break;
+                    case "3": // Multiplication
+                        result = num1 * num2;
+                        operationSymbol = "*";
+                        break;
+                    case "4": // Division
+                        while (num2 == 0 || num1 % num2 != 0)
                         {
-
-                            Random ran = new Random();
-                            int num1 = ran.Next(0, 100);
-                            int num2 = ran.Next(1, 10);
-
-                            if (num1 % num2 == 0)
-                            {
-                                int result = num1 / num2;
-                                Console.WriteLine($"\t {num1} / {num2}=");
-                                int userResult = Convert.ToInt32(Console.ReadLine());
-
-                                if (userResult == result)
-                                {
-                                    Console.WriteLine("Correct\t");
-                                    score++;
-                                }
-                                else
-                                {
-                                    isRunning = false;
-                                    Console.WriteLine("Incorrect");
-
-                                }
-                            }
-
-                            else
-                            {
-                                num2 = ran.Next(1, 10);
-                            }
-
+                            num1 = ran.Next(0, 100);
+                            num2 = ran.Next(1, 10);
                         }
+                        result = num1 / num2;
+                        operationSymbol = "/";
                         break;
                 }
 
-                scores[num] = score;
-                num++;
+                Console.WriteLine($"\t{num1} {operationSymbol} {num2} = ?");
+                int userResult = GetUserInput();
 
-                Console.WriteLine($"Your score for this round: {score}");
-                Console.WriteLine("Wanna play again? Y/N");
-                string playAgain = Console.ReadLine()?.ToUpper();
-
-                if (playAgain != "Y")
+                if (userResult == result)
                 {
-                    play = false;
+                    Console.WriteLine("Correct!");
+                    score++;
                 }
-
+                else
+                {
+                    Console.WriteLine("Incorrect. Ending this round.");
+                    isRunning = false;
+                }
             }
 
-            for (int i = 0; i < num; i++)
+            return score;
+        }
+
+        private void ViewHistory()
+        {
+            if (scores.Count == 0)
             {
-                Console.WriteLine($"{i + 1}.Score = {scores[i]}");
+                Console.WriteLine("No games played yet.");
+                return;
             }
 
+            Console.WriteLine("\nHistory of Previous Games:");
+            for (int i = 0; i < scores.Count; i++)
+            {
+                Console.WriteLine($"Game {i + 1}: Score = {scores[i]}");
+            }
+        }
 
+        private int GetUserInput()
+        {
+            while (true)
+            {
+                if (int.TryParse(Console.ReadLine(), out int result))
+                {
+                    return result;
+                }
+                Console.WriteLine("Invalid input. Please enter a number.");
+            }
         }
     }
 }
